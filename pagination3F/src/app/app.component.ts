@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  goToPage(name?: string, pageNumber?: number): void {
+  goToPage(name?: string, pageNumber: number = 0): void {
     this.usersState$ = this.userService.users$(name, pageNumber).pipe(
       map((response: ApiResponse<Page>) => {
         this.responseSubject.next(response);

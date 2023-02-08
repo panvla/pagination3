@@ -13,8 +13,9 @@
             <a class="nav-link">Home <span class="sr-only">(current)</span></a>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search users" aria-label="Search">
+        <form #searchForm="ngForm" (ngSubmit)="goToPage(searchForm.value.name)" class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" name="name" ngModel placeholder="Search users"
+            aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
@@ -61,22 +62,26 @@
             </tr>
           </tbody>
         </table>
-        <nav aria-label="Page navigation example">
+        <div *ngIf="state.appData.data.page.content.length < 1" class="alert alert-info" role="alert">
+          No users found!
+        </div>
+        <nav *ngIf="state.appData.data.page.content.length > 0" aria-label="Page navigation example">
           <ul class="pagination justify-content-end">
-            <li class="page-item" [ngClass]="0 == (currentPage$ | async) ? ' disabled' : ''">
-              <a (click)="goToNextOrPreviousPage('backward','')" class="page-link" aria-label="Previous">
+            <li class="page-item pointer" [ngClass]="0 == (currentPage$ | async) ? ' disabled' : ''">
+              <a (click)="goToNextOrPreviousPage('backward',searchForm.value.name)" class="page-link"
+                aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
             <li *ngFor="let pageNumber of [].constructor(state.appData.data.page.totalPages); let i = index;"
-              class="page-item">
-              <a (click)="goToPage('', i)" class="page-link">
+              class="page-item pointer" [ngClass]="i == (currentPage$ | async) ? ' active' : ''">
+              <a (click)="goToPage(searchForm.value.name, i)" class="page-link">
                 {{i + 1}}
               </a>
             </li>
-            <li class="page-item"
+            <li class="page-item pointer"
               [ngClass]="(state.appData.data.page.totalPages - 1) == (currentPage$ | async) ? ' disabled' : ''">
-              <a (click)="goToNextOrPreviousPage('forward','')" class="page-link" aria-label="Next">
+              <a (click)="goToNextOrPreviousPage('forward',searchForm.value.name)" class="page-link" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
